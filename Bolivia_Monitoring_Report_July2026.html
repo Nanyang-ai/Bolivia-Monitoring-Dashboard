@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolivia — Fuel Subsidy Crisis & Civil Unrest Monitoring</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --surface: #ffffff;
+    --surface2: #f9fafb;
+    --border: #e5e7eb;
+    --border2: #d1d5db;
+    --text: #111827;
+    --text-sec: #374151;
+    --text-muted: #6b7280;
+    --text-faint: #9ca3af;
+    --high: #c0392b;
+    --high-bg: rgba(192,57,43,0.08);
+    --high-border: rgba(192,57,43,0.25);
+    --elev: #b5690a;
+    --elev-bg: rgba(181,105,10,0.08);
+    --elev-border: rgba(181,105,10,0.25);
+    --low: #1a6aad;
+    --low-bg: rgba(26,106,173,0.08);
+    --low-border: rgba(26,106,173,0.25);
+    --stable: #166534;
+    --stable-bg: rgba(22,101,52,0.08);
+    --stable-border: rgba(22,101,52,0.25);
+    --wtw-bg: #eff6ff;
+    --wtw-border: #bfdbfe;
+    --wtw-text: #1e40af;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13.5px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 1.5rem 1rem 3rem;
+  }
+  .container { max-width: 1400px; margin: 0 auto; width: 100%; }
+
+  /* HEADER */
+  .header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .dash-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .dash-subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-high   { background: var(--high-bg);   color: var(--high);   border: 1px solid var(--high-border); }
+  .badge-elev   { background: var(--elev-bg);   color: var(--elev);   border: 1px solid var(--elev-border); }
+  .badge-low    { background: var(--low-bg);    color: var(--low);    border: 1px solid var(--low-border); }
+  .badge-stable { background: var(--stable-bg); color: var(--stable); border: 1px solid var(--stable-border); }
+  .badge-info   { background: var(--low-bg);    color: var(--low);    border: 1px solid var(--low-border); }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot-high   { background: var(--high);   animation: pulse 2.2s ease-in-out infinite; }
+  .dot-elev   { background: var(--elev); }
+  .dot-low    { background: var(--low); }
+  .dot-stable { background: var(--stable); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+
+  .trend { font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .trend-det   { color: #a0382c; }
+  .trend-sdet  { color: #8a5a0a; }
+  .trend-nochg { color: var(--text-muted); }
+  .trend-imp   { color: var(--stable); }
+
+  /* SECTIONS */
+  .section { margin-bottom: 1.25rem; animation: fadeUp 0.35s ease both; }
+  .section:nth-child(1) { animation-delay: 0.00s; }
+  .section:nth-child(2) { animation-delay: 0.06s; }
+  .section:nth-child(3) { animation-delay: 0.12s; }
+  .section:nth-child(4) { animation-delay: 0.18s; }
+  .section:nth-child(5) { animation-delay: 0.22s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+
+  .sec-label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; padding: 0 2px;
+  }
+
+  /* CARD */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+
+  /* KEY INSIGHTS */
+  .insights-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--high); border-radius: 6px;
+  }
+  .exec-table { width: 100%; border-collapse: collapse; }
+  .exec-table tr { border-bottom: 1px solid var(--border); }
+  .exec-table tr:last-child { border-bottom: none; }
+  .exec-table td { padding: 0.75rem 1.1rem; vertical-align: top; }
+  .exec-table td.exec-lbl {
+    width: 160px; font-weight: 600; color: var(--text-muted);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    white-space: nowrap; padding-top: 0.85rem;
+  }
+  .exec-table td.exec-content { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
+  .exec-bullets { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; margin: 0; }
+  .exec-bullets li { padding-left: 12px; position: relative; line-height: 1.55; }
+  .exec-bullets li::before { content: "•"; position: absolute; left: 0; color: var(--text-muted); }
+
+  /* INDICATOR TABLE */
+  .ind-table { width: 100%; border-collapse: collapse; }
+  .ind-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--border2); }
+  .ind-table th {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-align: left; padding: 8px 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .ind-table td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .ind-table tbody tr:last-child td { border-bottom: none; }
+  .ind-table tbody tr:hover { background: var(--surface2); }
+  .ind-name { font-weight: 500; font-size: 13px; color: var(--text); }
+  .ind-summary { font-size: 13px; color: var(--text-sec); line-height: 1.6; }
+
+  /* WHAT TO WATCH */
+  .wtw-wrap { display: block; margin-top: 10px; }
+  .wtw-toggle {
+    display: inline-flex; align-items: center; gap: 5px;
+    cursor: pointer;
+    font-size: 11px; font-weight: 500; color: var(--wtw-text);
+    background: var(--wtw-bg); border: 1px solid var(--wtw-border);
+    padding: 3px 10px; border-radius: 999px;
+    user-select: none; transition: background 0.15s;
+  }
+  .wtw-toggle:hover { background: #dbeafe; }
+  .wtw-toggle .wtw-arrow { font-size: 9px; }
+  .wtw-box {
+    display: none; margin-top: 8px;
+    background: var(--wtw-bg); border: 1px solid var(--wtw-border);
+    border-radius: 5px; padding: 10px 12px;
+    font-size: 12px; color: var(--text-sec); line-height: 1.6;
+  }
+  .wtw-box.open { display: block; }
+  .wtw-box strong { color: var(--text); }
+
+  /* CONFIDENCE */
+  .conf-inner { padding: 0.9rem 1.1rem; }
+  .conf-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.65rem; }
+  .conf-label { font-size: 12px; color: var(--text-muted); font-weight: 500; min-width: 130px; }
+  .conf-body { font-size: 13px; color: var(--text-sec); line-height: 1.65; }
+  .conf-body + .conf-body { margin-top: 0.5rem; }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  .footer {
+    margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text-faint);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+  }
+
+  @media (max-width: 600px) {
+    .ind-table thead { display: none; }
+    .ind-table td { display: block; padding: 6px 12px; }
+    .ind-table tr { display: block; border-bottom: 1px solid var(--border); padding: 8px 0; }
+    .ind-table tbody tr:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="dash-title">Bolivia — Fuel Subsidy Crisis &amp; Civil Unrest Monitoring</div>
+    <div class="dash-subtitle">
+      As of 10 July 2026
+    </div>
+  </div>
+
+  <!-- KEY INSIGHTS -->
+  <div class="section">
+    <div class="sec-label">Key Insights</div>
+    <div class="insights-card">
+      <table class="exec-table">
+        <tr>
+          <td class="exec-lbl">Current Situation</td>
+          <td class="exec-content">
+            <ul class="exec-bullets">
+              <li>Túpac Katari leader Vicente Salazar was arrested (4 Jul), charged with terrorism (5 Jul), and jailed for 6 months (6 Jul). His federation replaced him with a conciliatory new leader on 9 Jul, easing tension.</li>
+              <li>A real diesel/gas shortage — unrelated to the earlier blockades — is hitting Santa Cruz and Beni this week, with black-market fuel well above official prices. Drivers have given the government an ultimatum; YPFB says normal supply returns by end of month.</li>
+              <li>No new road blockades this week despite the volatility above.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Key Implications</td>
+          <td class="exec-content">
+            <ul class="exec-bullets">
+              <li>Salazar's arrest tested re-mobilisation risk and it held — no blockades resulted, and the leadership change eased tension further.</li>
+              <li>The fuel shortage is a new, separate risk driver worth watching independently of the political conflict, especially in Santa Cruz.</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- INDICATOR SUMMARY -->
+  <div class="section">
+    <div class="sec-label">Indicator Summary</div>
+    <div class="card">
+      <table class="ind-table">
+        <thead>
+          <tr>
+            <th style="width:18%">Indicator</th>
+            <th style="width:11%">Status</th>
+            <th style="width:17%">Trend (wk/wk)</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="ind-name">Airport Access &amp; Operations</div></td>
+            <td><span class="badge badge-low"><span class="dot dot-low"></span>Low</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No reporting this week of disruption to LPB (La Paz) or Viru Viru (Santa Cruz); unchanged from last week.
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Road Closures</div></td>
+            <td><span class="badge badge-low"><span class="dot dot-low"></span>Low</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No new blockades materialised this week despite the Salazar arrest and his federation's initial remobilisation threats — a meaningful test that passed without physical road closures. Situation eased further with the 9 July leadership change to a conciliatory successor.
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>Fuel-driven mobilisation.</strong> The national drivers' confederation has separately threatened "convulsión" over the unresolved diesel shortage — a different, transport-sector-led re-blockade risk distinct from the political conflict.</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Acts of Violence / Excessive Use of Force / Potential Coup d'État</div></td>
+            <td><span class="badge badge-elev"><span class="dot dot-elev"></span>Elevated</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No street violence reported this week. Rated Elevated given the arrest and imprisonment of a major protest leader (Salazar) on terrorism charges, plus a separate Santa Cruz Civic Committee complaint alleging "armed uprising" against Salazar, Morales, and Argollo [Última Hora, 6 Jul] — both signal an intensifying prosecutorial track even without street incidents. The week's volatility was partially offset by the 9 July leadership change toward a more conciliatory posture.
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>Morales case trajectory.</strong> Morales remains a fugitive under a standing arrest warrant; the government continues pursuing him as an alleged instigator of the blockades. His Chapare supporters have previously warned of "insurgency" if he's arrested — that risk is unchanged this week.</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">State of Emergency Declared / Curfews</div></td>
+            <td><span class="badge badge-elev"><span class="dot dot-elev"></span>Elevated</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              The state of exception (Supreme Decree 5636, declared 20 June) remained in force throughout this week with no change in status; it runs until 20 September 2026 if not lifted or renewed earlier [Infobae, 9 Jul]. No nationwide curfew is in effect. Notably, the driver confederation stated this week it may protest "despite" the state of exception if fuel demands aren't met — an early test of the decree's practical limits.
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Shortage of Essential Supplies</div></td>
+            <td><span class="badge badge-elev"><span class="dot dot-elev"></span>Elevated</span></td>
+            <td><span class="trend trend-det">↘ Deteriorating</span></td>
+            <td class="ind-summary">
+              Correction from last week's assessment: a genuine diesel and GLP shortage — independent of the earlier blockades — is affecting the country this week, most acutely in Santa Cruz department towns (San Ignacio de Velasco, Guarayos, Montero) and Beni (Trinidad), where black-market diesel sells at Bs 11.50–14/litre versus the official Bs 9.80 [La Razón, 9 Jul]. YPFB attributes delays to new fuel-quality control protocols and says normalisation won't come until end of July; Confeagro rejects that timeline, calling productive losses already irreversible [Agenda Minera, 9 Jul].
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>Driver confederation ultimatum.</strong> A 48-hour ultimatum issued 7 July for a government meeting had not been confirmed as resolved as of 9 July reporting; the union has threatened "convulsión" if unmet, despite the state of exception.</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- SCENARIOS -->
+  <div class="section">
+    <div class="sec-label">Scenarios</div>
+    <div class="card">
+      <table class="exec-table">
+        <tr>
+          <td class="exec-lbl">Base Case<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Materialising</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">Túpac Katari's new leadership holds a conciliatory line; the diesel/GLP shortage is gradually resolved through government-driver negotiation rather than street action.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>La Paz and Santa Cruz operations continue uninterrupted; fuel queues persist short-term but ease as YPFB's end-of-month normalisation takes effect.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Downside<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Plausible</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">The drivers' confederation escalates over unmet fuel commitments, or internal Túpac Katari dissent over Salazar's removal reignites mobilisation.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>Possible transport-sector strikes or localised blockades distinct from the earlier political conflict; Santa Cruz/Beni fuel access further strained.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Tail Risk<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Low Probability,<br>High Impact</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">Prosecutorial escalation (Salazar's imprisonment, the "armed uprising" complaint, ongoing pursuit of Morales) combines with unresolved fuel shortages to produce a broader crisis.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>Low probability this week given the de-escalatory leadership change; if it materialises, severe disruption nationwide.</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- CONFIDENCE -->
+  <div class="section">
+    <div class="sec-label">Confidence Assessment</div>
+    <div class="card">
+      <div class="conf-inner">
+        <div class="conf-row">
+          <span class="conf-label">Overall Confidence</span>
+          <span class="badge badge-info">Moderate–High</span>
+        </div>
+        <p class="conf-body">This week's assessment (3–10 July) is grounded in dense Bolivian-outlet coverage (EL DEBER, La Razón, Infobae, Los Tiempos, Página Siete, ANF, La Patria, Opinión, Erbol) of the Salazar arrest/imprisonment/leadership-change sequence and the diesel/GLP shortage, with each key fact corroborated across multiple independent outlets.</p>
+        <p class="conf-body">Key uncertainty: whether the driver confederation's ultimatum was resolved is not confirmed as of the latest available reporting (9 July). Whether Túpac Katari's new leadership holds against internal dissent is also unclear. Refresh upon confirmation of the driver ultimatum outcome, any change in Túpac Katari's stance, or any new blockade activity.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Bolivia Fuel Subsidy Crisis &amp; Civil Unrest Monitoring &nbsp;·&nbsp; As of 10 July 2026 &nbsp;·&nbsp; Refresh upon material development</span>
+    <span>Internal Use Only</span>
+  </div>
+
+</div>
+
+<script>
+  function toggleWtw(btn) {
+    btn.classList.toggle('open');
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    const arrow = btn.querySelector('.wtw-arrow');
+    arrow.textContent = box.classList.contains('open') ? '▼' : '▲';
+  }
+</script>
+</body>
+</html>
