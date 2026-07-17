@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolivia — Fuel Subsidy Crisis & Civil Unrest Monitoring</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --surface: #ffffff;
+    --surface2: #f9fafb;
+    --border: #e5e7eb;
+    --border2: #d1d5db;
+    --text: #111827;
+    --text-sec: #374151;
+    --text-muted: #6b7280;
+    --text-faint: #9ca3af;
+    --high: #c0392b;
+    --high-bg: rgba(192,57,43,0.08);
+    --high-border: rgba(192,57,43,0.25);
+    --elev: #b5690a;
+    --elev-bg: rgba(181,105,10,0.08);
+    --elev-border: rgba(181,105,10,0.25);
+    --low: #1a6aad;
+    --low-bg: rgba(26,106,173,0.08);
+    --low-border: rgba(26,106,173,0.25);
+    --stable: #166534;
+    --stable-bg: rgba(22,101,52,0.08);
+    --stable-border: rgba(22,101,52,0.25);
+    --wtw-bg: #eff6ff;
+    --wtw-border: #bfdbfe;
+    --wtw-text: #1e40af;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13.5px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 1.5rem 1rem 3rem;
+  }
+  .container { max-width: 1400px; margin: 0 auto; width: 100%; }
+
+  /* HEADER */
+  .header { border-bottom: 1px solid var(--border2); padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .dash-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .dash-subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-high   { background: var(--high-bg);   color: var(--high);   border: 1px solid var(--high-border); }
+  .badge-elev   { background: var(--elev-bg);   color: var(--elev);   border: 1px solid var(--elev-border); }
+  .badge-low    { background: var(--low-bg);    color: var(--low);    border: 1px solid var(--low-border); }
+  .badge-stable { background: var(--stable-bg); color: var(--stable); border: 1px solid var(--stable-border); }
+  .badge-info   { background: var(--low-bg);    color: var(--low);    border: 1px solid var(--low-border); }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot-high   { background: var(--high);   animation: pulse 2.2s ease-in-out infinite; }
+  .dot-elev   { background: var(--elev); }
+  .dot-low    { background: var(--low); }
+  .dot-stable { background: var(--stable); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+
+  .trend { font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .trend-det   { color: #a0382c; }
+  .trend-sdet  { color: #8a5a0a; }
+  .trend-nochg { color: var(--text-muted); }
+  .trend-imp   { color: var(--stable); }
+
+  /* SECTIONS */
+  .section { margin-bottom: 1.25rem; animation: fadeUp 0.35s ease both; }
+  .section:nth-child(1) { animation-delay: 0.00s; }
+  .section:nth-child(2) { animation-delay: 0.06s; }
+  .section:nth-child(3) { animation-delay: 0.12s; }
+  .section:nth-child(4) { animation-delay: 0.18s; }
+  .section:nth-child(5) { animation-delay: 0.22s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+
+  .sec-label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; padding: 0 2px;
+  }
+
+  /* CARD */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+
+  /* KEY INSIGHTS */
+  .insights-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--high); border-radius: 6px;
+  }
+  .exec-table { width: 100%; border-collapse: collapse; }
+  .exec-table tr { border-bottom: 1px solid var(--border); }
+  .exec-table tr:last-child { border-bottom: none; }
+  .exec-table td { padding: 0.75rem 1.1rem; vertical-align: top; }
+  .exec-table td.exec-lbl {
+    width: 160px; font-weight: 600; color: var(--text-muted);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    white-space: nowrap; padding-top: 0.85rem;
+  }
+  .exec-table td.exec-content { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
+  .exec-bullets { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; margin: 0; }
+  .exec-bullets li { padding-left: 12px; position: relative; line-height: 1.55; }
+  .exec-bullets li::before { content: "•"; position: absolute; left: 0; color: var(--text-muted); }
+
+  /* INDICATOR TABLE */
+  .ind-table { width: 100%; border-collapse: collapse; }
+  .ind-table thead tr { background: var(--surface2); border-bottom: 1px solid var(--border2); }
+  .ind-table th {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-align: left; padding: 8px 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .ind-table td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .ind-table tbody tr:last-child td { border-bottom: none; }
+  .ind-table tbody tr:hover { background: var(--surface2); }
+  .ind-name { font-weight: 500; font-size: 13px; color: var(--text); }
+  .ind-summary { font-size: 13px; color: var(--text-sec); line-height: 1.6; }
+
+  /* WHAT TO WATCH */
+  .wtw-wrap { display: block; margin-top: 10px; }
+  .wtw-toggle {
+    display: inline-flex; align-items: center; gap: 5px;
+    cursor: pointer;
+    font-size: 11px; font-weight: 500; color: var(--wtw-text);
+    background: var(--wtw-bg); border: 1px solid var(--wtw-border);
+    padding: 3px 10px; border-radius: 999px;
+    user-select: none; transition: background 0.15s;
+  }
+  .wtw-toggle:hover { background: #dbeafe; }
+  .wtw-toggle .wtw-arrow { font-size: 9px; }
+  .wtw-box {
+    display: none; margin-top: 8px;
+    background: var(--wtw-bg); border: 1px solid var(--wtw-border);
+    border-radius: 5px; padding: 10px 12px;
+    font-size: 12px; color: var(--text-sec); line-height: 1.6;
+  }
+  .wtw-box.open { display: block; }
+  .wtw-box strong { color: var(--text); }
+
+  /* CONFIDENCE */
+  .conf-inner { padding: 0.9rem 1.1rem; }
+  .conf-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.65rem; }
+  .conf-label { font-size: 12px; color: var(--text-muted); font-weight: 500; min-width: 130px; }
+  .conf-body { font-size: 13px; color: var(--text-sec); line-height: 1.65; }
+  .conf-body + .conf-body { margin-top: 0.5rem; }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  .footer {
+    margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text-faint);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+  }
+
+  @media (max-width: 600px) {
+    .ind-table thead { display: none; }
+    .ind-table td { display: block; padding: 6px 12px; }
+    .ind-table tr { display: block; border-bottom: 1px solid var(--border); padding: 8px 0; }
+    .ind-table tbody tr:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="dash-title">Bolivia — Fuel Subsidy Crisis &amp; Civil Unrest Monitoring</div>
+    <div class="dash-subtitle">
+      As of 17 July 2026
+    </div>
+  </div>
+
+  <!-- KEY INSIGHTS -->
+  <div class="section">
+    <div class="sec-label">Key Insights</div>
+    <div class="insights-card">
+      <table class="exec-table">
+        <tr>
+          <td class="exec-lbl">Current Situation</td>
+          <td class="exec-content">
+            <ul class="exec-bullets">
+              <li>The diesel/GLP shortage has deepened this week, not eased: as of 14 July, 60% of foreign-trade trucks remain paralysed for lack of diesel; black-market diesel now sells at Bs 15–18/litre (up from Bs 11.50–14 last week) vs. the official Bs 9.80. GLP (cooking gas) shortages have also emerged. The transport sector has called a national assembly for 29 July.</li>
+              <li>Evo Morales issued a direct threat from Chapare on 13 July: "the people will break the state of exception, from Santa Cruz." Cochabamba's mayor responded by demanding the government retake control of Chapare within two weeks.</li>
+              <li>Correction: the judiciary-budget standoff was actually defused on 1 July via a 40–50% budget increase pledge, not left open toward a later deadline as previously stated here. Full implementation of the judiciary's core demand remains under negotiation as of 11 July.</li>
+              <li>No new road blockades this week; the Túpac Katari federation's conciliatory leadership (since 9 Jul) appears to be holding.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Key Implications</td>
+          <td class="exec-content">
+            <ul class="exec-bullets">
+              <li>The fuel/GLP crisis is now the dominant operational risk — it's worsening, has a concrete new flashpoint (29 Jul assembly), and directly affects logistics in Santa Cruz.</li>
+              <li>Morales's direct threat this week raises Chapare/Cochabamba risk specifically; no sign yet of it translating into new blockades elsewhere.</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- INDICATOR SUMMARY -->
+  <div class="section">
+    <div class="sec-label">Indicator Summary</div>
+    <div class="card">
+      <table class="ind-table">
+        <thead>
+          <tr>
+            <th style="width:18%">Indicator</th>
+            <th style="width:11%">Status</th>
+            <th style="width:17%">Trend (wk/wk)</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="ind-name">Airport Access &amp; Operations</div></td>
+            <td><span class="badge badge-low"><span class="dot dot-low"></span>Low</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No reporting this week of disruption to LPB (La Paz) or Viru Viru (Santa Cruz); unchanged from last week.
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Road Closures</div></td>
+            <td><span class="badge badge-low"><span class="dot dot-low"></span>Low</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No new blockades this week. The Túpac Katari federation's conciliatory leadership (since 9 Jul) continues to hold, and Salazar's June arrest did not trigger re-mobilisation.
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>Two converging pressures.</strong> Evo Morales's 13 July threat to "break the state of exception from Santa Cruz," and the transport sector's 29 July national assembly over fuel shortages, are both potential mobilisation triggers distinct from each other.</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Acts of Violence / Excessive Use of Force / Potential Coup d'État</div></td>
+            <td><span class="badge badge-low"><span class="dot dot-low"></span>Low</span></td>
+            <td><span class="trend trend-nochg">→ No Change</span></td>
+            <td class="ind-summary">
+              No violent incidents reported for several weeks running. Rhetoric escalated this week — Evo Morales warned from Chapare on 13 July that "the people will break the state of exception, from Santa Cruz" [EL DÍA, 13 Jul], and Cochabamba's mayor responded by demanding the government retake control of Chapare within two weeks — but this remains a risk factor to watch, not a realised event.
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>Chapare stand-off.</strong> Morales remains a fugitive under a standing arrest warrant. His explicit threat this week, combined with the mayor of Cochabamba's public pressure on the government to act, raises the odds of a direct confrontation over the coming weeks — worth monitoring even though nothing has materialised yet.</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">State of Emergency Declared / Curfews</div></td>
+            <td><span class="badge badge-elev"><span class="dot dot-elev"></span>Elevated</span></td>
+            <td><span class="trend trend-imp">↗ Improving</span></td>
+            <td class="ind-summary">
+              The state of exception (Supreme Decree 5636) remains in force, running until 20 September 2026 if not lifted or renewed earlier. Separately, the judiciary-executive budget standoff — which had threatened a strike — was defused on 1 July via a 40–50% budget increase pledge; full implementation of the judiciary's core demand (raising its share from 0.35% to 5% of the state budget) remains under negotiation as of 11 July, but the acute strike threat has passed.
+            </td>
+          </tr>
+          <tr>
+            <td><div class="ind-name">Shortage of Essential Supplies</div></td>
+            <td><span class="badge badge-elev"><span class="dot dot-elev"></span>Elevated</span></td>
+            <td><span class="trend trend-det">↘ Deteriorating</span></td>
+            <td class="ind-summary">
+              The diesel/GLP shortage has deepened this week rather than easing: as of 14 July, 60% of foreign-trade trucks remain paralysed for lack of diesel [economy.com.bo, 14 Jul]; black-market diesel now sells at Bs 15–18/litre (up from Bs 11.50–14 last week) vs. the official Bs 9.80 [El Diario, 14 Jul]. A GLP (cooking gas) shortage has also emerged, driven by winter demand and a distributor's cylinder shortfall. YPFB's earlier "end of month" normalisation promise looks increasingly unlikely to hold. The transport sector has called a national assembly for 29 July.
+              <div class="wtw-wrap">
+                <div class="wtw-toggle" onclick="toggleWtw(this)"><span>👁 What to watch</span><span class="wtw-arrow">▲</span></div>
+                <div class="wtw-box"><strong>29 July transport assembly.</strong> A national "ampliado" of the transport sector is scheduled for 29 July over unresolved fuel shortages — a concrete date where escalation (strikes, blockades) becomes more likely if conditions haven't improved.</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- SCENARIOS -->
+  <div class="section">
+    <div class="sec-label">Scenarios</div>
+    <div class="card">
+      <table class="exec-table">
+        <tr>
+          <td class="exec-lbl">Base Case<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Materialising</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">Fuel shortages persist but don't trigger mass mobilisation before the 29 July transport assembly; Morales's rhetoric stays rhetorical.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>La Paz and Santa Cruz operations continue but with ongoing fuel/logistics friction; transport delays and higher costs persist.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Downside<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Plausible</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">The 29 July transport assembly votes to escalate (strikes/blockades) if fuel shortages remain unresolved, or Morales's threat translates into action in Chapare/Santa Cruz.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>Possible transport-sector strikes or renewed blockades; Santa Cruz/Cochabamba fuel access further strained.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="exec-lbl">Tail Risk<br><span style="font-weight:400;color:var(--text-faint);font-size:10px;text-transform:none;letter-spacing:0">Low Probability,<br>High Impact</span></td>
+          <td class="exec-content">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px;">Government moves on Chapare in response to Morales's threat, triggering direct confrontation; this combines with an unresolved fuel crisis to produce a broader crisis.</div>
+            <div style="color:var(--text-sec)"><span style="font-weight:600;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Operational Impact &nbsp;</span>Low probability this week; if it materialises, severe disruption nationwide.</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <!-- CONFIDENCE -->
+  <div class="section">
+    <div class="sec-label">Confidence Assessment</div>
+    <div class="card">
+      <div class="conf-inner">
+        <div class="conf-row">
+          <span class="conf-label">Overall Confidence</span>
+          <span class="badge badge-info">Moderate–High</span>
+        </div>
+        <p class="conf-body">This week's assessment (11–17 July) is grounded in Bolivian-outlet coverage of the deepening fuel/GLP crisis (El Diario, La Patria, EL DEBER, economy.com.bo) and Morales's 13 July statement (EL DÍA), with the judiciary-dispute correction sourced to La Patria's 1 July report on the strike suspension.</p>
+        <p class="conf-body">Key uncertainty: whether the 29 July transport assembly votes for escalation is not yet knowable. Whether Morales's threat is rhetorical pressure or signals an actual plan is unclear. Refresh upon the outcome of the 29 July assembly, any government action in Chapare, or any new blockade activity.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Bolivia Fuel Subsidy Crisis &amp; Civil Unrest Monitoring &nbsp;·&nbsp; As of 17 July 2026 &nbsp;·&nbsp; Refresh upon material development</span>
+    <span>Internal Use Only</span>
+  </div>
+
+</div>
+
+<script>
+  function toggleWtw(btn) {
+    btn.classList.toggle('open');
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    const arrow = btn.querySelector('.wtw-arrow');
+    arrow.textContent = box.classList.contains('open') ? '▼' : '▲';
+  }
+</script>
+</body>
+</html>
